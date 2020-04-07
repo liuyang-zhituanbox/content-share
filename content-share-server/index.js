@@ -2,7 +2,11 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const ResponseJson = require('./ResponseJson');
+const MemberCache = require('./MemberCache');
+const cacheManager = require('cache-manager');
+const memoryCache = cacheManager.caching({store: 'memory', max: 500, ttl: 60 * 10/*seconds*/});
 
+const KEY_PREFIX = 'content-share-';
 //创建application/json解析
 app.use(bodyParser.json());
 
@@ -17,16 +21,37 @@ app.get('/', function (req, res) {
 /**
  * 发送文本内容
  */
-app.post('/send/:domain', function (req, res) {
-    let domain = req.params.domain;
+app.post('/send', async function (req, res) {
+    let domain = req.query.domain;
     let body = req.body;
-    console.log(body);
     if (domain === undefined || domain === '') {
-        res.json(ResponseJson.ERROR("domain.is.not.blank", "域不能为空"));
+        await res.json(ResponseJson.ERROR("domain.not.blank", "域不能为空"));
+    } else if (domain.length > 40) {
+        await res.json(ResponseJson.ERROR("domain.too.long", "域不能超过40个字符"));
+    } else if (typeof body !== 'string') {
+        await res.json(ResponseJson.ERROR("body.type.not.support", "只能接受文本"));
+    } else if (body.trim() === '') {
+        await res.json(ResponseJson.ERROR("body.not.blank", "域不能超过40个字符"));
+    } else {
+        let memberCache = new MemberCache(memoryCache, domain);
+        memberCache.add(body);
+        let keys = await memoryCache.keys();
+        await res.json(ResponseJson.SUCCESS());
     }
-    res.json(ResponseJson.SUCCESS());
     res.end();
 });
+
+app.get('/text', async function (req, res) {
+    let domain = req.query.domain;
+    if (domain === undefined || domain === '') {
+        await res.json(ResponseJson.ERROR("domain.not.blank", "域不能为空"));
+    } else {
+        let memberCache = new MemberCache(memoryCache, domain);
+        await res.json(ResponseJson.SUCCESS(memberCache.values()));
+    }
+    res.end();
+});
+
 
 app.listen(3000, function () {
     console.log('app listening on port 3000!');
