@@ -21,5 +21,9 @@
   "bugs": {
     "url": "https://github.com/liuyang-zhituanbox/content-share/issues"
   },
-  "homepage": "https://github.com/liuyang-zhituanbox/content-share#readme"
+  "homepage": "https://github.com/liuyang-zhituanbox/content-share#readme",
+  "dependencies": {
+    "cache-manager": "^3.2.1",
+    "express": "^4.17.1"
+  }
 }

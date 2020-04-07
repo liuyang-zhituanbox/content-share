@@ -26,7 +26,9 @@ class MemberCache {
      * @param value 数据
      */
     async add(value) {
-        await this.cache.set(getMemberKey(this.key), new CacheValue(value));
+        let memberKey = getMemberKey(this.key);
+        await this.cache.set(memberKey, new CacheValue(value));
+        return memberKey;
     }
 
     /**
@@ -37,7 +39,8 @@ class MemberCache {
         let keys = await this.cache.keys();
         let values = [];
         let memberKeyConstant = MEMBER_CACHE_PREFIX + this.key;
-        for (let memberKey in keys) {
+        for (let index in keys) {
+            let memberKey = keys[index];
             // noinspection JSUnfilteredForInLoop
             if (memberKey.startsWith(memberKeyConstant)) {
                 let cacheValue = await this.cache.get(memberKey);

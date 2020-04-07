@@ -34,9 +34,8 @@ app.post('/send', async function (req, res) {
         await res.json(ResponseJson.ERROR("body.not.blank", "域不能超过40个字符"));
     } else {
         let memberCache = new MemberCache(memoryCache, domain);
-        memberCache.add(body);
-        let keys = await memoryCache.keys();
-        await res.json(ResponseJson.SUCCESS());
+        let memberKey = await memberCache.add(body);
+        await res.json(ResponseJson.SUCCESS(memberKey));
     }
     res.end();
 });
@@ -47,7 +46,7 @@ app.get('/text', async function (req, res) {
         await res.json(ResponseJson.ERROR("domain.not.blank", "域不能为空"));
     } else {
         let memberCache = new MemberCache(memoryCache, domain);
-        await res.json(ResponseJson.SUCCESS(memberCache.values()));
+        await res.json(ResponseJson.SUCCESS(await memberCache.values()));
     }
     res.end();
 });
