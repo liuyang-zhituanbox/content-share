@@ -1,0 +1,25 @@
+{
+  "name": "content-share-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "serve": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/liuyang-zhituanbox/content-share.git"
+  },
+  "keywords": [
+    "text",
+    "content",
+    "share"
+  ],
+  "author": "liuyang",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/liuyang-zhituanbox/content-share/issues"
+  },
+  "homepage": "https://github.com/liuyang-zhituanbox/content-share#readme"
+}
