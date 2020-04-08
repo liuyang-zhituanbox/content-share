@@ -4,7 +4,9 @@ const bodyParser = require('body-parser');
 const ResponseJson = require('./ResponseJson');
 const MemberCache = require('./MemberCache');
 const cacheManager = require('cache-manager');
-const memoryCache = cacheManager.caching({store: 'memory', max: 500, ttl: 60 * 10/*seconds*/});
+//一天的秒数
+const dayOfSeconds = 60 * 60 * 24;
+const memoryCache = cacheManager.caching({store: 'memory', max: 5000, ttl: dayOfSeconds * 14/*seconds*/});
 
 const KEY_PREFIX = 'content-share-';
 //创建application/json解析
@@ -47,6 +49,20 @@ app.get('/text', async function (req, res) {
     } else {
         let memberCache = new MemberCache(memoryCache, domain);
         await res.json(ResponseJson.SUCCESS(await memberCache.values()));
+    }
+    res.end();
+});
+/**
+ * 获取最新一个
+ */
+app.get('/text/latest', async function (req, res) {
+    let domain = req.query.domain;
+    if (domain === undefined || domain === '') {
+        await res.json(ResponseJson.ERROR("domain.not.blank", "域不能为空"));
+    } else {
+        let memberCache = new MemberCache(memoryCache, domain);
+        let values = await memberCache.values();
+        await res.json(ResponseJson.SUCCESS(values.length > 0 ? values[0] : undefined));
     }
     res.end();
 });
