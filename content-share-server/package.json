@@ -25,6 +25,6 @@
   "dependencies": {
     "cache-manager": "^3.2.1",
     "express": "^4.17.1",
-    "moment": "^2.24.0"
+    "moment": "^2.29.2"
   }
 }
