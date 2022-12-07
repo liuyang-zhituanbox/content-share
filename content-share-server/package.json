@@ -24,7 +24,7 @@
   "homepage": "https://github.com/liuyang-zhituanbox/content-share#readme",
   "dependencies": {
     "cache-manager": "^3.2.1",
-    "express": "^4.17.1",
+    "express": "^4.18.2",
     "moment": "^2.24.0"
   }
 }
